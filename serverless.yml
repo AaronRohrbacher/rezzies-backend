@@ -1,12 +1,10 @@
-# "org" ensures this Service is used with the correct Serverless Framework Access Key.
-org: rohrbacher
 # "service" is the name of this project. This will also be added to your AWS resource names.
 service: rezzies-backend
 
 stages:
   default:
     params:
-      tableName: "users-table-${sls:stage}"
+      tableName: "reservations-table-${sls:stage}"
 
 provider:
   name: aws
@@ -23,9 +21,9 @@ provider:
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
           Resource:
-            - Fn::GetAtt: [UsersTable, Arn]
+            - Fn::GetAtt: [ReservationsTable, Arn]
   environment:
-    USERS_TABLE: ${param:tableName}
+    RESERVATIONS_TABLE: ${param:tableName}
 
 functions:
   api:
@@ -35,14 +33,62 @@ functions:
 
 resources:
   Resources:
-    UsersTable:
+    ReservationsTable:
       Type: AWS::DynamoDB::Table
       Properties:
         AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
           - AttributeName: userId
             AttributeType: S
+          - AttributeName: restaurantId
+            AttributeType: S
+          - AttributeName: seatingId
+            AttributeType: S
+          - AttributeName: reservationId
+            AttributeType: S
         KeySchema:
-          - AttributeName: userId
+          - AttributeName: id
             KeyType: HASH
-        BillingMode: PAY_PER_REQUEST
+        GlobalSecondaryIndexes:
+          - IndexName: userId
+            KeySchema:
+              - AttributeName: userId
+                KeyType: HASH 
+            Projection:
+              ProjectionType: "ALL"
+            ProvisionedThroughput:
+                ReadCapacityUnits: 1
+                WriteCapacityUnits: 1
+          - IndexName: restaurantId
+            KeySchema:
+              - AttributeName: restaurantId
+                KeyType: HASH 
+            Projection:
+              ProjectionType: "ALL"
+            ProvisionedThroughput:
+                ReadCapacityUnits: 1
+                WriteCapacityUnits: 1
+          - IndexName: seatingId
+            KeySchema:
+              - AttributeName: seatingId
+                KeyType: HASH 
+            Projection:
+              ProjectionType: "ALL"
+            ProvisionedThroughput:
+                ReadCapacityUnits: 1
+                WriteCapacityUnits: 1
+          - IndexName: reservationId
+            KeySchema:
+              - AttributeName: reservationId
+                KeyType: HASH 
+            Projection:
+              ProjectionType: "ALL"
+            ProvisionedThroughput:
+                ReadCapacityUnits: 1
+                WriteCapacityUnits: 1
+
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
         TableName: ${param:tableName}
