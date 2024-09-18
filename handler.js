@@ -1,3 +1,4 @@
+
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 
 const {
@@ -11,7 +12,29 @@ const serverless = require("serverless-http");
 
 const app = express();
 
+const { auth } = require('express-oauth2-jwt-bearer');
+
 const RESERVATIONS_TABLE = process.env.RESERVATIONS_TABLE;
+
+// const port = process.env.PORT || 8080;
+
+const jwtCheck = auth({
+  audience: 'http://localhost:3000',
+  issuerBaseURL: 'https://dev-dknrub66od10a3x7.us.auth0.com/',
+  tokenSigningAlg: 'RS256'
+});
+
+// enforce on all endpoints
+// app.use(jwtCheck);
+
+app.get('/authorized', jwtCheck, function (req, res) {
+    res.send('Secured Resource');
+});
+
+// app.listen(port);
+
+// console.log('Running on port ', port);
+
 
 let client;
 console.log(process.env.IS_OFFLINE)
