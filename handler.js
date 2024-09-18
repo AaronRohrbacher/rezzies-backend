@@ -14,6 +14,7 @@ const app = express();
 const RESERVATIONS_TABLE = process.env.RESERVATIONS_TABLE;
 
 let client;
+console.log(process.env.IS_OFFLINE)
 if (process.env.IS_OFFLINE === 'true') {
   client = new DynamoDBClient({
     region: 'localhost',
@@ -51,24 +52,24 @@ app.get("/users/:userId", async (req, res) => {
   }
 });
 
-app.post("/users", async (req, res) => {
-  const { id, name } = req.body;
-  if (typeof id !== "string") {
-    res.status(400).json({ error: '"userId" must be a string' });
-  } else if (typeof name !== "string") {
-    res.status(400).json({ error: '"name" must be a string' });
-  }
+app.post("/restaurants", async (req, res) => {
+  const { id, userId, restaurantId, restaurantName } = req.body;
+  // if (typeof id !== "string") {
+  //   res.status(400).json({ error: '"userId" must be a string' });
+  // } else if (typeof name !== "string") {
+  //   res.status(400).json({ error: '"name" must be a string' });
+  // }
   debugger;
   const params = {
     TableName: RESERVATIONS_TABLE,
-    Item: { id, name },
+    Item: { id, userId, restaurantId, restaurantName },
   };
 
   try {
     console.log(RESERVATIONS_TABLE)
     const command = new PutCommand(params);
     await docClient.send(command);
-    res.json({ id, name });
+    res.json("success");
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Could not create user" });

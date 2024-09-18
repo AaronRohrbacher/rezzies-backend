@@ -5,10 +5,26 @@ plugins:
   - serverless-dynamodb
   - serverless-offline
 
+
+
 stages:
   default:
     params:
       tableName: "reservations-table-${sls:stage}"
+
+custom:
+  reservationsTableName: "reservations-table-${sls:stage}"
+  dynamodb:
+    stages:
+      - dev
+    start:
+      port: 8000
+      inMemory: true
+      heapInitial: 200m
+      heapMax: 1g
+      migrate: true
+      seed: true
+      convertEmptyValues: true
 
 provider:
   name: aws
