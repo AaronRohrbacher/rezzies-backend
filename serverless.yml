@@ -1,6 +1,28 @@
 # "service" is the name of this project. This will also be added to your AWS resource names.
 service: rezzies-backend
 
+plugins:
+  - serverless-dynamodb
+  - serverless-offline
+
+custom:
+  reservationsTableName: "reservations-table-${sls:stage}"
+  dynamodb:
+    stages:
+      - dev
+    start:
+      port: 8000
+      inMemory: true
+      heapInitial: 200m
+      heapMax: 1g
+      migrate: true
+      seed: true
+      convertEmptyValues: true
+  serverless-offline:
+    noPrependStageInUrl: true
+    reloadHandler: true
+
+
 stages:
   default:
     params:

@@ -11,17 +11,26 @@ const serverless = require("serverless-http");
 
 const app = express();
 
-const USERS_TABLE = process.env.USERS_TABLE;
-const client = new DynamoDBClient();
+const RESERVATIONS_TABLE = process.env.RESERVATIONS_TABLE;
+
+let client;
+if (process.env.IS_OFFLINE === 'true') {
+  client = new DynamoDBClient({
+    region: 'localhost',
+    endpoint: 'http://localhost:8000'
+  });  
+} else {
+  client = new DynamoDBClient();
+}
 const docClient = DynamoDBDocumentClient.from(client);
 
 app.use(express.json());
 
 app.get("/users/:userId", async (req, res) => {
   const params = {
-    TableName: USERS_TABLE,
+    TableName: RESERVATIONS_TABLE,
     Key: {
-      userId: req.params.userId,
+      id: req.params.id,
     },
   };
 
@@ -43,22 +52,23 @@ app.get("/users/:userId", async (req, res) => {
 });
 
 app.post("/users", async (req, res) => {
-  const { userId, name } = req.body;
-  if (typeof userId !== "string") {
+  const { id, name } = req.body;
+  if (typeof id !== "string") {
     res.status(400).json({ error: '"userId" must be a string' });
   } else if (typeof name !== "string") {
     res.status(400).json({ error: '"name" must be a string' });
   }
-
+  debugger;
   const params = {
-    TableName: USERS_TABLE,
-    Item: { userId, name },
+    TableName: RESERVATIONS_TABLE,
+    Item: { id, name },
   };
 
   try {
+    console.log(RESERVATIONS_TABLE)
     const command = new PutCommand(params);
     await docClient.send(command);
-    res.json({ userId, name });
+    res.json({ id, name });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Could not create user" });
