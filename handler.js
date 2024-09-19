@@ -16,7 +16,7 @@ const { auth } = require('express-oauth2-jwt-bearer');
 
 const RESERVATIONS_TABLE = process.env.RESERVATIONS_TABLE;
 
-// const port = process.env.PORT || 8080;
+// const port = process.env.PORT || 3000;
 
 const jwtCheck = auth({
   audience: 'http://localhost:3000',
@@ -75,16 +75,10 @@ app.get("/users/:userId", async (req, res) => {
   }
 });
 
-app.post("/restaurants", async (req, res) => {
+app.post("/restaurants", async (req, res) => { 
   const { id, userId, restaurantId, restaurantName } = req.body;
-  // if (typeof id !== "string") {
-  //   res.status(400).json({ error: '"userId" must be a string' });
-  // } else if (typeof name !== "string") {
-  //   res.status(400).json({ error: '"name" must be a string' });
-  // }
-  debugger;
   const params = {
-    TableName: RESERVATIONS_TABLE,
+    TableName: "reservations-table-dev", //RESERVATIONS_TABLE,
     Item: { id, userId, restaurantId, restaurantName },
   };
 
@@ -99,6 +93,8 @@ app.post("/restaurants", async (req, res) => {
   }
 });
 
+
+
 app.use((req, res, next) => {
   return res.status(404).json({
     error: "Not Found",
@@ -106,3 +102,7 @@ app.use((req, res, next) => {
 });
 
 exports.handler = serverless(app);
+module.exports = {
+  handler: serverless(app), // Lambda handler
+  app, // Express app
+};
