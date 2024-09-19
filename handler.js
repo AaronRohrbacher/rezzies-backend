@@ -101,7 +101,6 @@ app.use((req, res, next) => {
   });
 });
 
-exports.handler = serverless(app);
 module.exports = {
   handler: serverless(app), // Lambda handler
   app, // Express app
