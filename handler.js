@@ -89,7 +89,7 @@ app.post("/restaurants", async (req, res) => {
     res.json("success");
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Could not create user" });
+    res.status(500).json({ error: "Could not create restaurant" });
   }
 });
 
