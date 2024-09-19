@@ -1,17 +1,11 @@
 // handler.js
 const express = require('express');
 const serverless = require('serverless-http');
-const { auth } = require('express-oauth2-jwt-bearer');
+const jwtCheck = require('./routes/helpers/jwtAuth');  // Import the jwtCheck function
 const restaurantsRoutes = require('./routes/restaurants');  // Import your routes file
 
 const app = express();
 app.use(express.json());
-
-const jwtCheck = auth({
-  audience: 'http://localhost:3000',
-  issuerBaseURL: 'https://dev-dknrub66od10a3x7.us.auth0.com/',
-  tokenSigningAlg: 'RS256'
-});
 
 // Enforce JWT authentication on all endpoints
 // app.use(jwtCheck);
@@ -30,6 +24,6 @@ app.use((req, res, next) => {
 });
 
 module.exports = {
-  handler: serverless(app),  // Lambda handler
+  // handler: serverless(app),  // Lambda handler
   app,  // Express app
 };

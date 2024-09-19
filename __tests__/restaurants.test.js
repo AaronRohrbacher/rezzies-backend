@@ -1,4 +1,3 @@
-// test/restaurants.test.js
 const request = require('supertest');
 const { app } = require('../handler');  // Ensure the app is imported correctly
 
@@ -13,6 +12,7 @@ describe('POST /restaurants', () => {
 
     const response = await request(app)
       .post('/restaurants')  // Adjust to match the base path used
+      .set('Authorization', process.env.USER_AUTH_TOKEN)
       .send(newRestaurant);
 
     expect(response.statusCode).toEqual(200);
@@ -29,6 +29,7 @@ describe('POST /restaurants', () => {
 
     const response = await request(app)
       .post('/restaurants')  // Adjust to match the base path used
+      .set('Authorization', process.env.USER_AUTH_TOKEN)
       .send(incompleteRestaurant);
 
     expect(response.statusCode).toEqual(400);
