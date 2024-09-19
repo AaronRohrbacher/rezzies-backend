@@ -78,7 +78,7 @@ app.get("/users/:userId", async (req, res) => {
 app.post("/restaurants", async (req, res) => { 
   const { id, userId, restaurantId, restaurantName } = req.body;
   const params = {
-    TableName: "reservations-table-dev", //RESERVATIONS_TABLE,
+    TableName: RESERVATIONS_TABLE,
     Item: { id, userId, restaurantId, restaurantName },
   };
 
