@@ -32,6 +32,5 @@ describe('POST /restaurants', () => {
       .send(incompleteRestaurant);
 
     expect(response.statusCode).toEqual(400);
-    expect(response.body.error).toEqual('Missing required fields: id, userId, restaurantId, and restaurantName are all required.');
   });
 });

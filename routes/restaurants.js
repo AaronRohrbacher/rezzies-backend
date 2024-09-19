@@ -7,18 +7,15 @@ const router = express.Router();
 
 router.post('/restaurants', async (req, res) => {
   const { id, userId, restaurantId, restaurantName } = req.body;
-
   if (!id || !userId || !restaurantId || !restaurantName) {
     return res.status(400).json({
-      error: 'Missing required fields: id, userId, restaurantId, and restaurantName are all required.',
+      error: 'Bad request.',
     });
   }
-
   const params = {
     TableName: RESERVATIONS_TABLE,
     Item: { id, userId, restaurantId, restaurantName },
   };
-
   try {
     const command = new PutCommand(params);
     await docClient.send(command);
