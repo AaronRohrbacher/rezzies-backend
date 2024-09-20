@@ -1,11 +1,18 @@
 # "service" is the name of this project. This will also be added to your AWS resource names.
 service: rezzies-backend
 
+package: 
+  excludeDevDependencies: true
+  patterns:
+    - '!node_modules/aws-sdk/**'
+    - '!node_modules/@aws-sdk/**'
+    - '!node_modules/java-invoke-local/**'
+    - '!__tests__'
+    - '!.dynamodb'
+
 plugins:
   - serverless-dynamodb
   - serverless-offline
-
-
 
 stages:
   default:
@@ -29,6 +36,7 @@ custom:
 provider:
   name: aws
   runtime: nodejs20.x
+  region: us-west-2
   iam:
     role:
       statements:
@@ -61,6 +69,8 @@ resources:
             AttributeType: S
           - AttributeName: userId
             AttributeType: S
+          - AttributeName: name
+            AttributeType: S
           - AttributeName: restaurantId
             AttributeType: S
           - AttributeName: seatingId
@@ -71,10 +81,12 @@ resources:
           - AttributeName: id
             KeyType: HASH
         GlobalSecondaryIndexes:
-          - IndexName: userId
+          - IndexName: users
             KeySchema:
               - AttributeName: userId
-                KeyType: HASH 
+                KeyType: HASH
+              - AttributeName: name
+                KeyType: RANGE
             Projection:
               ProjectionType: "ALL"
             ProvisionedThroughput:
@@ -105,10 +117,10 @@ resources:
             Projection:
               ProjectionType: "ALL"
             ProvisionedThroughput:
-                ReadCapacityUnits: 1
-                WriteCapacityUnits: 1
+                ReadCapacityUnits: 20
+                WriteCapacityUnits: 20
 
         ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
+          ReadCapacityUnits: 20
+          WriteCapacityUnits: 20
         TableName: ${param:tableName}

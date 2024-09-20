@@ -3,6 +3,7 @@ const express = require('express');
 const serverless = require('serverless-http');
 const jwtCheck = require('./routes/helpers/jwtAuth');  // Import the jwtCheck function
 const restaurantsRoutes = require('./routes/restaurants');  // Import your routes file
+const usersRoutes = require('./routes/users');
 
 const app = express();
 app.use(express.json());
@@ -16,6 +17,8 @@ app.get('/authorized', jwtCheck, function (req, res) {
 
 // Use the routes from restaurants.js
 app.use('/', restaurantsRoutes);
+app.use('/', usersRoutes);
+
 
 app.use((req, res, next) => {
   return res.status(404).json({
@@ -24,6 +27,6 @@ app.use((req, res, next) => {
 });
 
 module.exports = {
-  // handler: serverless(app),  // Lambda handler
+  handler: serverless(app),  // Lambda handler
   app,  // Express app
 };

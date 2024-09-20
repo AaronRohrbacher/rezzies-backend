@@ -2,7 +2,6 @@ const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const { DynamoDBDocumentClient } = require('@aws-sdk/lib-dynamodb');
 
 let docClient;
-
 if (process.env.IS_OFFLINE === 'true') {
   docClient = DynamoDBDocumentClient.from(new DynamoDBClient({
     region: 'localhost',

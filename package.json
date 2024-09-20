@@ -3,18 +3,19 @@
   "version": "1.0.0",
   "description": "",
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.585.0",
-    "@aws-sdk/lib-dynamodb": "^3.585.0",
     "express": "^4.19.2",
     "express-oauth2-jwt-bearer": "^1.6.0",
     "jsonwebtoken": "^9.0.2",
-    "serverless-http": "^3.2.0"
+    "serverless-http": "^3.2.0",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "jest": "^29.7.0",
     "serverless-dynamodb": "^0.2.54",
     "serverless-offline": "^13.8.0",
-    "supertest": "^7.0.0"
+    "supertest": "^7.0.0",
+    "@aws-sdk/client-dynamodb": "^3.585.0",
+    "@aws-sdk/lib-dynamodb": "^3.585.0"
   },
   "scripts": {
     "test": "jest --coverage"
