@@ -1,3 +1,5 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: rohrbacher
 # "service" is the name of this project. This will also be added to your AWS resource names.
 service: rezzies-backend
 
@@ -11,8 +13,9 @@ package:
     - '!.dynamodb'
 
 plugins:
-  - serverless-dynamodb
   - serverless-offline
+  - serverless-dynamodb
+
 
 stages:
   default:
@@ -32,6 +35,8 @@ custom:
       migrate: true
       seed: true
       convertEmptyValues: true
+  serverless-offline:
+    reloadHandler: true
 
 provider:
   name: aws
@@ -69,8 +74,6 @@ resources:
             AttributeType: S
           - AttributeName: userId
             AttributeType: S
-          - AttributeName: name
-            AttributeType: S
           - AttributeName: restaurantId
             AttributeType: S
           - AttributeName: seatingId
@@ -85,8 +88,6 @@ resources:
             KeySchema:
               - AttributeName: userId
                 KeyType: HASH
-              - AttributeName: name
-                KeyType: RANGE
             Projection:
               ProjectionType: "ALL"
             ProvisionedThroughput:
@@ -117,8 +118,8 @@ resources:
             Projection:
               ProjectionType: "ALL"
             ProvisionedThroughput:
-                ReadCapacityUnits: 20
-                WriteCapacityUnits: 20
+                ReadCapacityUnits: 1
+                WriteCapacityUnits: 1
 
         ProvisionedThroughput:
           ReadCapacityUnits: 20

@@ -1,0 +1,17 @@
+{
+    "configurations": [
+        {
+            "command": "sls offline start",
+            "name": "Start Serverless",
+            "request": "launch",
+            "type": "node-terminal"
+        },
+        {
+            "type": "node-terminal",
+            "name": "Run Script: test",
+            "request": "launch",
+            "command": "npm run test",
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
