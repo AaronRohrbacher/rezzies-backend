@@ -1,9 +1,9 @@
 const express = require('express');
 const { PutCommand } = require('@aws-sdk/lib-dynamodb');
-const docClient = require('./helpers/dynamodbClient');  // Import the DynamoDB client
-const { RESERVATIONS_TABLE } = require('./helpers/config');  // Import the configuration
-const jwtCheck = require('./helpers/jwtAuth');  // Import jwtCheck middleware
-const decodeJwt = require('./helpers/decodeJwt')
+const docClient = require('./helpers/dynamodbClient'); // Import the DynamoDB client
+const { RESERVATIONS_TABLE } = require('./helpers/config'); // Import the configuration
+const jwtCheck = require('./helpers/jwtAuth'); // Import jwtCheck middleware
+const decodeJwt = require('./helpers/decodeJwt');
 const router = express.Router();
 
 router.post('/restaurants', decodeJwt, async (req, res) => {

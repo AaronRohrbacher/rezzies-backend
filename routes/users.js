@@ -1,18 +1,22 @@
 const express = require('express');
-const { PutCommand, UpdateCommand, DeleteCommand } = require('@aws-sdk/lib-dynamodb');
+const {
+  PutCommand,
+  UpdateCommand,
+  DeleteCommand,
+} = require('@aws-sdk/lib-dynamodb');
 const docClient = require('./helpers/dynamodbClient');
 const { RESERVATIONS_TABLE } = require('./helpers/config');
 const jwtCheck = require('./helpers/jwtAuth');
-const decodeJwt = require('./helpers/decodeJwt')
+const decodeJwt = require('./helpers/decodeJwt');
 const { v4: uuidv4 } = require('uuid');
 const { QueryCommand } = require('@aws-sdk/client-dynamodb');
 const router = express.Router();
 
 router.post('/users', async (req, res) => {
   const { userId, name } = req.body;
-  const type = "user"
+  const type = 'user';
   const id = uuidv4();
-  console.log(id)
+  console.log(id);
   if (!userId || !name) {
     return res.status(400).json({
       error: 'Bad request.',
@@ -40,27 +44,27 @@ router.get('/users/:userId', async (req, res) => {
     });
   }
   const params = {
-    TableName: "reservations-table-dev",
+    TableName: 'reservations-table-dev',
     ScanIndexForward: false,
-    IndexName: "users",
-    KeyConditionExpression: "#8e330 = :8e330",
-    FilterExpression: "#8e331 = :8e331",
+    IndexName: 'users',
+    KeyConditionExpression: '#8e330 = :8e330',
+    FilterExpression: '#8e331 = :8e331',
     ExpressionAttributeValues: {
-      ":8e330": {
-        S: userId
+      ':8e330': {
+        S: userId,
       },
-      ":8e331": {
-        S: "user"
-      }
+      ':8e331': {
+        S: 'user',
+      },
     },
     ExpressionAttributeNames: {
-      "#8e330": "userId",
-      "#8e331": "type"
-    }
+      '#8e330': 'userId',
+      '#8e331': 'type',
+    },
   };
   try {
-    const command = new QueryCommand(params)
-    console.log(command)
+    const command = new QueryCommand(params);
+    console.log(command);
     const response = await docClient.send(command);
     if (!response.Items || response.Items.length === 0) {
       return res.status(404).json({
@@ -98,35 +102,39 @@ router.patch('/users/:userId', async (req, res) => {
     const queryResult = await docClient.send(queryCommand);
 
     if (!queryResult.Items || queryResult.Items.length === 0) {
-      return res.status(404).json({ error: `User with userId ${userId} not found.` });
+      return res
+        .status(404)
+        .json({ error: `User with userId ${userId} not found.` });
     }
     const user = queryResult.Items[0];
     const id = user.id.S;
     const updateParams = {
-      TableName: "reservations-table-dev",
+      TableName: 'reservations-table-dev',
       Key: {
-        'id': id,
+        id: id,
       },
-      UpdateExpression: "SET #9cbf0 = :9cbf0, #9cbf1 = :9cbf1, #9cbf2 = :9cbf2",
+      UpdateExpression: 'SET #9cbf0 = :9cbf0, #9cbf1 = :9cbf1, #9cbf2 = :9cbf2',
       ExpressionAttributeValues: {
-        ":9cbf0": name,
-        ":9cbf1": "user",
-        ":9cbf2": userId
+        ':9cbf0': name,
+        ':9cbf1': 'user',
+        ':9cbf2': userId,
       },
       ExpressionAttributeNames: {
-        "#9cbf0": "name",
-        "#9cbf1": "type",
-        "#9cbf2": "userId",
+        '#9cbf0': 'name',
+        '#9cbf1': 'type',
+        '#9cbf2': 'userId',
       },
     };
     const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
     const { DynamoDBDocumentClient } = require('@aws-sdk/lib-dynamodb');
     let updateDocClient;
     if (process.env.IS_OFFLINE === 'true') {
-      updateDocClient = DynamoDBDocumentClient.from(new DynamoDBClient({
-        region: 'localhost',
-        endpoint: 'http://localhost:8000'
-      }));
+      updateDocClient = DynamoDBDocumentClient.from(
+        new DynamoDBClient({
+          region: 'localhost',
+          endpoint: 'http://localhost:8000',
+        })
+      );
     } else {
       updateDocClient = DynamoDBDocumentClient.from(new DynamoDBClient());
     }
@@ -137,7 +145,7 @@ router.patch('/users/:userId', async (req, res) => {
     });
   } catch (error) {
     console.error('Error updating user:', error);
-    res.status(500).json({ error: 'Could not update user' })
+    res.status(500).json({ error: 'Could not update user' });
   }
 });
 
@@ -163,14 +171,16 @@ router.delete('/users/:userId', async (req, res) => {
     const queryResult = await docClient.send(queryCommand);
 
     if (!queryResult.Items || queryResult.Items.length === 0) {
-      return res.status(404).json({ error: `User with userId ${userId} not found.` });
+      return res
+        .status(404)
+        .json({ error: `User with userId ${userId} not found.` });
     }
     const user = queryResult.Items[0];
     const id = user.id.S;
     const deleteParams = {
       TableName: 'reservations-table-dev',
       Key: {
-        'id': id,
+        id: id,
       },
     };
     const deleteCommand = new DeleteCommand(deleteParams);

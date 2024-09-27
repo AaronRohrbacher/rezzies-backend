@@ -1,5 +1,5 @@
 const request = require('supertest');
-const { app } = require('../handler');  // Ensure the app is imported correctly
+const { app } = require('../handler'); // Ensure the app is imported correctly
 
 // describe('POST /users', () => {
 //     it('should add a new user and return success', async () => {
@@ -38,13 +38,12 @@ const { app } = require('../handler');  // Ensure the app is imported correctly
 describe('GET /users/:userId', () => {
   it('reads one user from database', async () => {
     const user = {
-      userId: "123",
+      userId: '123',
     };
 
     const response = await request(app)
-      .get(`/users/:${user.userId}`)  // Adjust to match the base path used
+      .get(`/users/:${user.userId}`) // Adjust to match the base path used
       .set('Authorization', process.env.USER_AUTH_TOKEN)
       .send();
   });
 });
-

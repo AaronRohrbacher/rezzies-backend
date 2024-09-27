@@ -3,7 +3,7 @@ org: rohrbacher
 # "service" is the name of this project. This will also be added to your AWS resource names.
 service: rezzies-backend
 
-package: 
+package:
   excludeDevDependencies: true
   patterns:
     - '!node_modules/aws-sdk/**'
@@ -16,14 +16,13 @@ plugins:
   - serverless-offline
   - serverless-dynamodb
 
-
 stages:
   default:
     params:
-      tableName: "reservations-table-${sls:stage}"
+      tableName: 'reservations-table-${sls:stage}'
 
 custom:
-  reservationsTableName: "reservations-table-${sls:stage}"
+  reservationsTableName: 'reservations-table-${sls:stage}'
   dynamodb:
     stages:
       - dev
@@ -62,7 +61,7 @@ functions:
   api:
     handler: handler.handler
     events:
-      - httpApi: "*"
+      - httpApi: '*'
 
 resources:
   Resources:
@@ -89,37 +88,37 @@ resources:
               - AttributeName: userId
                 KeyType: HASH
             Projection:
-              ProjectionType: "ALL"
+              ProjectionType: 'ALL'
             ProvisionedThroughput:
-                ReadCapacityUnits: 1
-                WriteCapacityUnits: 1
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
           - IndexName: restaurantId
             KeySchema:
               - AttributeName: restaurantId
-                KeyType: HASH 
+                KeyType: HASH
             Projection:
-              ProjectionType: "ALL"
+              ProjectionType: 'ALL'
             ProvisionedThroughput:
-                ReadCapacityUnits: 1
-                WriteCapacityUnits: 1
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
           - IndexName: seatingId
             KeySchema:
               - AttributeName: seatingId
-                KeyType: HASH 
+                KeyType: HASH
             Projection:
-              ProjectionType: "ALL"
+              ProjectionType: 'ALL'
             ProvisionedThroughput:
-                ReadCapacityUnits: 1
-                WriteCapacityUnits: 1
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
           - IndexName: reservationId
             KeySchema:
               - AttributeName: reservationId
-                KeyType: HASH 
+                KeyType: HASH
             Projection:
-              ProjectionType: "ALL"
+              ProjectionType: 'ALL'
             ProvisionedThroughput:
-                ReadCapacityUnits: 1
-                WriteCapacityUnits: 1
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
 
         ProvisionedThroughput:
           ReadCapacityUnits: 20

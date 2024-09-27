@@ -13,13 +13,22 @@
   "devDependencies": {
     "@aws-sdk/client-dynamodb": "^3.585.0",
     "@aws-sdk/lib-dynamodb": "^3.585.0",
+    "@eslint/js": "^9.11.1",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.0",
+    "globals": "^15.9.0",
     "jest": "^29.7.0",
     "nodemon": "^3.1.6",
+    "prettier": "^3.3.3",
     "serverless-dynamodb": "^0.2.54",
     "serverless-offline": "^13.8.0",
     "supertest": "^7.0.0"
   },
   "scripts": {
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "format:check": "prettier --check .",
+    "format:write": "prettier --write .",
+    "lint:check": "eslint .",
+    "lint:fix": "eslint --fix ."
   }
 }

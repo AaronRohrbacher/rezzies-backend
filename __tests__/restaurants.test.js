@@ -1,17 +1,17 @@
 const request = require('supertest');
-const { app } = require('../handler');  // Ensure the app is imported correctly
+const { app } = require('../handler'); // Ensure the app is imported correctly
 
 describe('POST /restaurants', () => {
   it('should add a new restaurant and return success', async () => {
     const newRestaurant = {
-      id: "1",
-      userId: "123",
-      restaurantId: "223",
-      restaurantName: "jimbos"
+      id: '1',
+      userId: '123',
+      restaurantId: '223',
+      restaurantName: 'jimbos',
     };
 
     const response = await request(app)
-      .post('/restaurants')  // Adjust to match the base path used
+      .post('/restaurants') // Adjust to match the base path used
       .set('Authorization', process.env.USER_AUTH_TOKEN)
       .send(newRestaurant);
 
@@ -21,14 +21,14 @@ describe('POST /restaurants', () => {
 
   it('should return 400 if required fields are missing', async () => {
     const incompleteRestaurant = {
-      id: "1",
-      userId: "123",
-      restaurantId: "223"
+      id: '1',
+      userId: '123',
+      restaurantId: '223',
       // restaurantName is missing
     };
 
     const response = await request(app)
-      .post('/restaurants')  // Adjust to match the base path used
+      .post('/restaurants') // Adjust to match the base path used
       .set('Authorization', process.env.USER_AUTH_TOKEN)
       .send(incompleteRestaurant);
 
