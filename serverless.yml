@@ -92,7 +92,7 @@ resources:
             ProvisionedThroughput:
               ReadCapacityUnits: 1
               WriteCapacityUnits: 1
-          - IndexName: restaurantId
+          - IndexName: restaurants
             KeySchema:
               - AttributeName: restaurantId
                 KeyType: HASH
