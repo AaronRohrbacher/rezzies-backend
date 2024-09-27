@@ -16,7 +16,6 @@ router.post('/users', async (req, res) => {
   const { userId, name } = req.body;
   const type = 'user';
   const id = uuidv4();
-  console.log(id);
   if (!userId || !name) {
     return res.status(400).json({
       error: 'Bad request.',
@@ -64,7 +63,6 @@ router.get('/users/:userId', async (req, res) => {
   };
   try {
     const command = new QueryCommand(params);
-    console.log(command);
     const response = await docClient.send(command);
     if (!response.Items || response.Items.length === 0) {
       return res.status(404).json({
