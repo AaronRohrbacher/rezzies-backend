@@ -3,3 +3,5 @@ node_modules
 .dynamodb
 .env
 coverage
+.fetch-client
+.vscode
