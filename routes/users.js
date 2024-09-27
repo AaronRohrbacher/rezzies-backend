@@ -166,7 +166,6 @@ router.delete('/users/:userId', async (req, res) => {
     },
   };
   try {
-    // Query the user
     const queryCommand = new QueryCommand(queryParams);
     const queryResult = await docClient.send(queryCommand);
 
