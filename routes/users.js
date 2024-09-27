@@ -1,8 +1,8 @@
 const express = require('express');
 const { PutCommand, UpdateCommand, DeleteCommand } = require('@aws-sdk/lib-dynamodb');
-const docClient = require('./helpers/dynamodbClient');  // Import the DynamoDB client
-const { RESERVATIONS_TABLE } = require('./helpers/config');  // Import the configuration
-const jwtCheck = require('./helpers/jwtAuth');  // Import jwtCheck middleware
+const docClient = require('./helpers/dynamodbClient');
+const { RESERVATIONS_TABLE } = require('./helpers/config');
+const jwtCheck = require('./helpers/jwtAuth');
 const decodeJwt = require('./helpers/decodeJwt')
 const { v4: uuidv4 } = require('uuid');
 const { QueryCommand } = require('@aws-sdk/client-dynamodb');
@@ -33,7 +33,6 @@ router.post('/users', async (req, res) => {
 });
 
 router.get('/users/:userId', async (req, res) => {
-  // return res.send("FUCK")
   const { userId } = req.params;
   if (!userId) {
     return res.status(400).json({
@@ -48,7 +47,7 @@ router.get('/users/:userId', async (req, res) => {
     FilterExpression: "#8e331 = :8e331",
     ExpressionAttributeValues: {
       ":8e330": {
-        S: "2"
+        S: userId
       },
       ":8e331": {
         S: "user"
@@ -68,7 +67,7 @@ router.get('/users/:userId', async (req, res) => {
         error: `User with userId ${userId} not found.`,
       });
     }
-    res.status(200).json(response.Items);  // Return the first item found
+    res.status(200).json(response.Items);
   } catch (error) {
     console.error('Error fetching user:', error);
     res.status(500).json({
@@ -77,18 +76,12 @@ router.get('/users/:userId', async (req, res) => {
   }
 });
 
-// Update user by userId
 router.patch('/users/:userId', async (req, res) => {
   const { userId } = req.params;
   const { name } = req.body;
-
-
-
   if (!userId) {
     return res.status(400).json({ error: 'Bad Request. userId is required.' });
   }
-
-  // Step 1: Query the user by userId using the GSI
   const queryParams = {
     TableName: 'reservations-table-dev',
     IndexName: 'users',
@@ -100,25 +93,19 @@ router.patch('/users/:userId', async (req, res) => {
       '#userId': 'userId',
     },
   };
-
   try {
-    // Query the user
     const queryCommand = new QueryCommand(queryParams);
     const queryResult = await docClient.send(queryCommand);
 
     if (!queryResult.Items || queryResult.Items.length === 0) {
       return res.status(404).json({ error: `User with userId ${userId} not found.` });
     }
-
-    // Extract the `id` from the query result
     const user = queryResult.Items[0];
-    const id = user.id.S; // Access the string value of id
-console.log(name, id)
-    // Step 2: Update the user using the retrieved id
+    const id = user.id.S;
     const updateParams = {
       TableName: "reservations-table-dev",
       Key: {
-        'id': id, // Primary key for the update   
+        'id': id,
       },
       UpdateExpression: "SET #9cbf0 = :9cbf0, #9cbf1 = :9cbf1, #9cbf2 = :9cbf2",
       ExpressionAttributeValues: {
@@ -130,11 +117,8 @@ console.log(name, id)
         "#9cbf0": "name",
         "#9cbf1": "type",
         "#9cbf2": "userId",
-        // "#9cbf3": "id",
-
       },
     };
-
     const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
     const { DynamoDBDocumentClient } = require('@aws-sdk/lib-dynamodb');
     let updateDocClient;
@@ -146,29 +130,22 @@ console.log(name, id)
     } else {
       updateDocClient = DynamoDBDocumentClient.from(new DynamoDBClient());
     }
-    
-        // Execute the update command
     const updateCommand = new UpdateCommand(updateParams);
     await updateDocClient.send(updateCommand);
-
     res.status(200).json({
       message: 'User updated successfully',
     });
   } catch (error) {
     console.error('Error updating user:', error);
-    res.status(500).json({ error: 'Could not update user' });
+    res.status(500).json({ error: 'Could not update user' })
   }
 });
 
-// Delete user by userId
 router.delete('/users/:userId', async (req, res) => {
   const { userId } = req.params;
-
   if (!userId) {
     return res.status(400).json({ error: 'Bad Request. userId is required.' });
   }
-
-  // Step 1: Query the user by userId using the GSI to check if the user exists
   const queryParams = {
     TableName: 'reservations-table-dev',
     IndexName: 'users',
@@ -180,7 +157,6 @@ router.delete('/users/:userId', async (req, res) => {
       '#userId': 'userId',
     },
   };
-
   try {
     // Query the user
     const queryCommand = new QueryCommand(queryParams);
@@ -189,24 +165,16 @@ router.delete('/users/:userId', async (req, res) => {
     if (!queryResult.Items || queryResult.Items.length === 0) {
       return res.status(404).json({ error: `User with userId ${userId} not found.` });
     }
-
-    // Extract the `id` from the query result to use for deletion
     const user = queryResult.Items[0];
     const id = user.id.S;
-
-    // Step 2: Delete the user using the retrieved id
     const deleteParams = {
       TableName: 'reservations-table-dev',
       Key: {
         'id': id,
-
       },
     };
-
-    // Execute the delete command
     const deleteCommand = new DeleteCommand(deleteParams);
     await docClient.send(deleteCommand);
-
     res.status(200).json({
       message: `User with userId ${userId} deleted successfully.`,
     });
@@ -215,8 +183,5 @@ router.delete('/users/:userId', async (req, res) => {
     res.status(500).json({ error: 'Could not delete user' });
   }
 });
-
-
-
 
 module.exports = router;
