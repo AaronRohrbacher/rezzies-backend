@@ -21,9 +21,39 @@ router.post('/restaurants/:restaurantId/tables', async (req, res) => {
       error: 'Bad request.',
     });
   }
+  
+  const queryParams = {
+    TableName: RESERVATIONS_TABLE,
+    IndexName: 'restaurants',
+    KeyConditionExpression: '#restaurantId = :restaurantId',
+    ExpressionAttributeValues: {
+      ':restaurantId': { S: restaurantId },
+    },
+    ExpressionAttributeNames: {
+      '#restaurantId': 'restaurantId',
+    },
+  };
+
+  try {
+    const queryCommand = new QueryCommand(queryParams);
+    const queryResult = await docClient.send(queryCommand);
+
+    if (!queryResult.Items || queryResult.Items.length === 0) {
+      return res
+        .status(404)
+        .json({
+          error: `restaurant with restaurantId ${restaurantId} not found.`,
+        });
+    }
+  } catch (error) {
+    console.error('Restaurant not found', error);
+    res.status(500).json({ error: 'Restaurant not found' });
+  }
+
+
   const params = {
     TableName: RESERVATIONS_TABLE,
-    Item: { id, restaurtantId, tableId, tableName },
+    Item: { id, restaurantId, tableId, tableName },
   };
   try {
     const command = new PutCommand(params);

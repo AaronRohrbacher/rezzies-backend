@@ -13,13 +13,12 @@ describe('POST /restaurants/:restaurantId/tables', () => {
   });
   it('adds a table', async () => {
     const newTable = {
-      restaurantId: '224',
       tableId: '11',
       tableName: '1', 
     };
 
     const response = await request(app)
-      .post(`/restaurants/${newTable.restaurantId}/tables`) // Adjust to match the base path used
+      .post('/restaurants/224/tables') // Adjust to match the base path used
       // .set('Authorization', process.env.USER_AUTH_TOKEN)
       .send(newTable);
 
@@ -39,20 +38,20 @@ describe('POST /restaurants/:restaurantId/tables', () => {
   });
 });
 
-// describe('GET /restaurants/:restaurantId', () => {
-//   beforeEach(async () => {
-//     await request(app)
-//       .post('/restaurants')
-//       .send({ restaurantId: '224', restaurantName: 'aaron', userId: '4' });
-//   });
-//   afterEach(async () => {
-//     await request(app).delete('/restaurants/224');
-//   });
-//   it('reads a created restaurant', async () => {
-//     response = await request(app).get('/restaurants/224');
-//     expect(response.statusCode).toEqual(200);
-//   });
-// });
+describe('GET /restaurants/:restaurantId', () => {
+  beforeEach(async () => {
+    await request(app)
+      .post('/restaurants')
+      .send({ restaurantId: '224', restaurantName: 'aaron', userId: '4' });
+  });
+  afterEach(async () => {
+    await request(app).delete('/restaurants/224');
+  });
+  it('reads a created restaurant', async () => {
+    response = await request(app).get('/restaurants/224');
+    expect(response.statusCode).toEqual(200);
+  });
+});
 
 // describe('PATCH /restaurants/:restaurantId', () => {
 //   beforeEach(async () => {
