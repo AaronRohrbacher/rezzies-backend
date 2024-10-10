@@ -38,38 +38,46 @@ describe('POST /restaurants/:restaurantId/tables', () => {
   });
 });
 
-describe('GET /restaurants/:restaurantId', () => {
+describe('GET /restaurants/:restaurantId/tables/:tableId', () => {
   beforeEach(async () => {
     await request(app)
       .post('/restaurants')
       .send({ restaurantId: '224', restaurantName: 'aaron', userId: '4' });
+    await request(app)
+      .post('/restaurants/224/tables')
+      .send({ tableId: '11', tableName: '11' })
   });
   afterEach(async () => {
+    // await request(app).delete('/restaurants/224/tables/224');
     await request(app).delete('/restaurants/224');
   });
-  it('reads a created restaurant', async () => {
-    response = await request(app).get('/restaurants/224');
+  it('reads a created table', async () => {
+    response = await request(app).get('/restaurants/224/tables/11');
     expect(response.statusCode).toEqual(200);
   });
 });
 
-// describe('PATCH /restaurants/:restaurantId', () => {
-//   beforeEach(async () => {
-//     await request(app)
-//       .post('/restaurants')
-//       .send({ restaurantId: '225', restaurantName: 'aaron', userId: '4' });
-//   });
-//   afterEach(async () => {
-//     await request(app).delete('/restaurants/225');
-//   });
-//   it('updates a restaurant', async () => {
-//     response = await request(app)
-//       .patch('/restaurants/225')
-//       .send({ name: 'fuckface' });
-//     compare = await request(app).get('/restaurants/225');
-//     expect(response.statusCode).toEqual(200);
-//   });
-// });
+describe('PATCH /restaurants/:restaurantId', () => {
+  beforeEach(async () => {
+    await request(app)
+      .post('/restaurants')
+      .send({ restaurantId: '224', restaurantName: 'aaron', userId: '4' });
+    await request(app)
+      .post('/restaurants/224/tables')
+      .send({ tableId: '11', tableName: '11' })
+  });
+  afterEach(async () => {
+    // await request(app).delete('/restaurants/224/tables/224');
+    await request(app).delete('/restaurants/224');
+  });
+  it('updates a restaurant', async () => {
+    response = await request(app)
+      .patch('/restaurants/224/tables/11')
+      .send({ name: 'fuckface' });
+    compare = await request(app).get('/restaurants/224/tables/11');
+    expect(compare.body[0].name.S).toEqual('fuckface');
+  });
+});
 
 // describe('deletes a restaurant', () => {
 //   beforeEach(async () => {

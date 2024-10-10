@@ -128,11 +128,11 @@ router.patch('/restaurants/:restaurantId/tables/:tableId', async (req, res) => {
       return res
         .status(404)
         .json({
-          error: `restaurant with tableId ${tableId} not found.`,
+          error: `table with tableId ${tableId} not found.`,
         });
     }
-    const restaurant = queryResult.Items[0];
-    const id = restaurant.id.S;
+    const table = queryResult.Items[0];
+    const id = table.id.S;
     const updateParams = {
       TableName: 'reservations-table-dev',
       Key: {
@@ -141,7 +141,7 @@ router.patch('/restaurants/:restaurantId/tables/:tableId', async (req, res) => {
       UpdateExpression: 'SET #9cbf0 = :9cbf0, #9cbf1 = :9cbf1, #9cbf2 = :9cbf2',
       ExpressionAttributeValues: {
         ':9cbf0': name,
-        ':9cbf1': 'restaurant',
+        ':9cbf1': 'table',
         ':9cbf2': tableId,
       },
       ExpressionAttributeNames: {
