@@ -48,7 +48,7 @@ describe('GET /restaurants/:restaurantId/tables/:tableId', () => {
       .send({ tableId: '11', tableName: '11' })
   });
   afterEach(async () => {
-    // await request(app).delete('/restaurants/224/tables/224');
+    await request(app).delete('/restaurants/224/tables/11');
     await request(app).delete('/restaurants/224');
   });
   it('reads a created table', async () => {
@@ -67,7 +67,7 @@ describe('PATCH /restaurants/:restaurantId', () => {
       .send({ tableId: '11', tableName: '11' })
   });
   afterEach(async () => {
-    // await request(app).delete('/restaurants/224/tables/224');
+    await request(app).delete('/restaurants/224/tables/11');
     await request(app).delete('/restaurants/224');
   });
   it('updates a restaurant', async () => {
@@ -79,14 +79,21 @@ describe('PATCH /restaurants/:restaurantId', () => {
   });
 });
 
-// describe('deletes a restaurant', () => {
-//   beforeEach(async () => {
-//     await request(app)
-//       .post('/restaurants')
-//       .send({ restaurantId: '226', restaurantName: 'aaron', userId: '4' });
-//   });
-//   it('deletes a restaurant', async () => {
-//     response = await request(app).delete('/restaurants/226');
-//     expect(response.statusCode).toEqual(200);
-//   });
-// });
+describe('DELETE /restaurants/:restaurantId/tables/:tableId', () => {
+  beforeEach(async () => {
+    await request(app)
+      .post('/restaurants/224')
+      .send({ restaurantId: '224', restaurantName: 'aaron', userId: '4' });
+    await request(app)
+      .post('/restaurants/224/tables')
+      .send({ tableId: '11', tableName: '11' })
+  });
+  afterEach(async () => {
+    await request(app)
+      .delete('/restaurants/224');
+  })
+  it('deletes a table', async () => {
+    response = await request(app).delete('/restaurants/224/tables/11');
+    expect(response.statusCode).toEqual(200);
+  });
+});
