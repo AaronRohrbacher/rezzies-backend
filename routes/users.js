@@ -10,9 +10,12 @@ const jwtCheck = require('./helpers/jwtAuth');
 const decodeJwt = require('./helpers/decodeJwt');
 const { v4: uuidv4 } = require('uuid');
 const { QueryCommand } = require('@aws-sdk/client-dynamodb');
+const { decode } = require('jsonwebtoken');
 const router = express.Router();
 
-router.post('/users', async (req, res) => {
+router.post('/users', jwtCheck, decodeJwt, async (req, res) => {
+  const user = decodeJwt;
+  
   const { userId, name } = req.body;
   const type = 'user';
   const id = uuidv4();

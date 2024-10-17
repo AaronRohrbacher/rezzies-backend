@@ -1,5 +1,6 @@
 const request = require('supertest');
 const { app } = require('../handler'); // Ensure the app is imported correctly
+const { response } = require('express');
 
 describe('POST /restaurants/:restaurantId/tables', () => {
   beforeEach(async () => {
@@ -52,12 +53,12 @@ describe('GET /restaurants/:restaurantId/tables/:tableId', () => {
     await request(app).delete('/restaurants/224');
   });
   it('reads a created table', async () => {
-    response = await request(app).get('/restaurants/224/tables/11');
+    const response = await request(app).get('/restaurants/224/tables/11');
     expect(response.statusCode).toEqual(200);
   });
 });
 
-describe('PATCH /restaurants/:restaurantId', () => {
+describe('PATCH /restaurants/:restaurantId/tables/:tableId', () => {
   beforeEach(async () => {
     await request(app)
       .post('/restaurants')
@@ -70,11 +71,11 @@ describe('PATCH /restaurants/:restaurantId', () => {
     await request(app).delete('/restaurants/224/tables/11');
     await request(app).delete('/restaurants/224');
   });
-  it('updates a restaurant', async () => {
-    response = await request(app)
+  it('updates a table', async () => {
+    await request(app)
       .patch('/restaurants/224/tables/11')
       .send({ name: 'fuckface' });
-    compare = await request(app).get('/restaurants/224/tables/11');
+    const compare = await request(app).get('/restaurants/224/tables/11');
     expect(compare.body[0].name.S).toEqual('fuckface');
   });
 });
@@ -93,7 +94,7 @@ describe('DELETE /restaurants/:restaurantId/tables/:tableId', () => {
       .delete('/restaurants/224');
   })
   it('deletes a table', async () => {
-    response = await request(app).delete('/restaurants/224/tables/11');
+    const response = await request(app).delete('/restaurants/224/tables/11');
     expect(response.statusCode).toEqual(200);
   });
 });

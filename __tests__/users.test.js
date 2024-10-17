@@ -10,10 +10,9 @@ describe('POST /users', () => {
       userId: '223',
       name: 'jimbos',
     };
-
     const response = await request(app)
       .post('/users') // Adjust to match the base path used
-      // .set('Authorization', process.env.USER_AUTH_TOKEN)
+      .set('Authorization', process.env.USER_AUTH_TOKEN)
       .send(newUser);
 
     expect(response.statusCode).toEqual(200);
@@ -26,7 +25,7 @@ describe('POST /users', () => {
     };
     const response = await request(app)
       .post('/users') // Adjust to match the base path used
-      // .set('Authorization', process.env.USER_AUTH_TOKEN)
+      .set('Authorization', process.env.USER_AUTH_TOKEN)
       .send(incompleteUser);
     expect(response.statusCode).toEqual(400);
   });
@@ -34,20 +33,27 @@ describe('POST /users', () => {
 
 describe('GET /users/:userId', () => {
   beforeEach(async () => {
-    await request(app).post('/users').send({ userId: '224', name: 'aaron' });
+    await request(app)
+      .post('/users')
+      .set('Authorization', process.env.USER_AUTH_TOKEN)
+      .send({ userId: '224', name: 'aaron' });
   });
   afterEach(async () => {
     await request(app).delete('/users/224');
+    console.log('FUCKAFTER')
   });
   it('reads a created user', async () => {
     response = await request(app).get('/users/224');
+    console.log('FUCKDURING')
     expect(response.statusCode).toEqual(200);
   });
 });
 
 describe('PATCH /users/:userId', () => {
   beforeEach(async () => {
-    await request(app).post('/users').send({ userId: '225', name: 'aaron' });
+    await request(app).post('/users')
+      .set('Authorization', process.env.USER_AUTH_TOKEN)
+      .send({ userId: '225', name: 'aaron' });
   });
   afterEach(async () => {
     await request(app).delete('/users/225');
@@ -63,7 +69,9 @@ describe('PATCH /users/:userId', () => {
 
 describe('deletes a user', () => {
   beforeEach(async () => {
-    await request(app).post('/users').send({ userId: '226', name: 'aaron' });
+    await request(app).post('/users')
+      .set('Authorization', process.env.USER_AUTH_TOKEN)
+      .send({ userId: '226', name: 'aaron' });
   });
   it('deletes a user', async () => {
     response = await request(app).delete('/users/226');

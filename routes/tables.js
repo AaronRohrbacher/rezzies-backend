@@ -106,6 +106,7 @@ router.get('/restaurants/:restaurantId/tables/:tableId', async (req, res) => {
 router.patch('/restaurants/:restaurantId/tables/:tableId', async (req, res) => {
   const { tableId } = req.params;
   const { name } = req.body;
+  console.log(tableId.S)
   if (!tableId) {
     return res.status(400).json({ error: 'Bad Request. restaurtantId is required.' });
   }
